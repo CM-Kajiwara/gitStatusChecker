@@ -17,28 +17,42 @@ var screenLock = function(callback) {
     });
 };
 targetRepositories.forEach(function(targetRepository){
-    console.log(targetRepository);
     var repository = git.open(targetRepository);
     var status = repository.getStatus();
-    var i = 0;
+    console.log(status);
     if(Object.keys(status).length > 0){
-        i++;
         notifier.notify({
-            'title': 'Please check Repository' + i,
+            'title': 'Please check Repository' ,
             'message': 'Target Repository is ' + repository.getPath(),
             'icon':'./material-design-icons/alert/2x_web/ic_error_black_48dp.png',
             'wait': true
         });
         notifier.on('click', function () {
             exec(terminalPath + ' ' + targetRepository);
+            process.exit();
         });
-        existsWarningRepository = true;
     }
+    var command = 'export GIT_FORGOT_DIR=' + repository.getPath() + '&& git-forget';
+    exec(command,function(err,stdout){
+        if(!err && stdout){
+            notifier.notify({
+                'title': 'This Repository is not pushed!!' ,
+                'message': 'Target Repository is ' + repository.getPath(),
+                'icon':'./material-design-icons/alert/2x_web/ic_error_black_48dp.png',
+                'wait': true
+            });
+            notifier.on('click', function () {
+                exec(terminalPath + ' ' + targetRepository);
+                process.exit();
+            });
+        }
+    });
 });
+
 if(!existsWarningRepository){
-   screenLock(function(err,message){
-       console.log(err,message);
-   });
+   //screenLock(function(err,message){
+   //    console.log(err,message);
+   //});
 }
 
 var GIT_STATUS ={
