@@ -19,8 +19,8 @@ var screenLock = function(callback) {
 targetRepositories.forEach(function(targetRepository){
     var repository = git.open(targetRepository);
     var status = repository.getStatus();
-    console.log(status);
     if(Object.keys(status).length > 0){
+        existsWarningRepository = true;
         notifier.notify({
             'title': 'Please check Repository' ,
             'message': 'Target Repository is ' + repository.getPath(),
@@ -32,8 +32,9 @@ targetRepositories.forEach(function(targetRepository){
             process.exit();
         });
     }
-    var command = 'export GIT_FORGOT_DIR=' + repository.getPath() + '&& git-forget';
+    var command = 'export GIT_FORGOT_DIR=' + targetRepository + '&& git-forgot';
     exec(command,function(err,stdout){
+        existsWarningRepository = true;
         if(!err && stdout){
             notifier.notify({
                 'title': 'This Repository is not pushed!!' ,
@@ -50,26 +51,27 @@ targetRepositories.forEach(function(targetRepository){
 });
 
 if(!existsWarningRepository){
-   //screenLock(function(err,message){
-   //    console.log(err,message);
-   //});
+   screenLock(function(err,message){
+       console.log(err,message);
+       process.exit();
+   });
 }
 
-var GIT_STATUS ={
-    GIT_STATUS_CURRENT          : 0,
-    GIT_STATUS_INDEX_NEW        : (1 << 0),
-    GIT_STATUS_INDEX_MODIFIED   : (1 << 1),
-    GIT_STATUS_INDEX_DELETED    : (1 << 2),
-    GIT_STATUS_INDEX_RENAMED    : (1 << 3),
-    GIT_STATUS_INDEX_TYPECHANGE : (1 << 4),
-    GIT_STATUS_WT_NEW           : (1 << 7),
-    GIT_STATUS_WT_MODIFIED      : (1 << 8),
-    GIT_STATUS_WT_DELETED       : (1 << 9),
-    GIT_STATUS_WT_TYPECHANGE    : (1 << 10),
-    GIT_STATUS_WT_RENAMED       : (1 << 11),
-    GIT_STATUS_WT_UNREADABLE    : (1 << 12),
-    GIT_STATUS_IGNORED          : (1 << 14),
-    GIT_STATUS_CONFLICTED       : (1 << 15)
-};
+//var GIT_STATUS ={
+//    GIT_STATUS_CURRENT          : 0,
+//    GIT_STATUS_INDEX_NEW        : (1 << 0),
+//    GIT_STATUS_INDEX_MODIFIED   : (1 << 1),
+//    GIT_STATUS_INDEX_DELETED    : (1 << 2),
+//    GIT_STATUS_INDEX_RENAMED    : (1 << 3),
+//    GIT_STATUS_INDEX_TYPECHANGE : (1 << 4),
+//    GIT_STATUS_WT_NEW           : (1 << 7),
+//    GIT_STATUS_WT_MODIFIED      : (1 << 8),
+//    GIT_STATUS_WT_DELETED       : (1 << 9),
+//    GIT_STATUS_WT_TYPECHANGE    : (1 << 10),
+//    GIT_STATUS_WT_RENAMED       : (1 << 11),
+//    GIT_STATUS_WT_UNREADABLE    : (1 << 12),
+//    GIT_STATUS_IGNORED          : (1 << 14),
+//    GIT_STATUS_CONFLICTED       : (1 << 15)
+//};
 
 
