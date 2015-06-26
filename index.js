@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 'use strict';
 var git = require('git-utils');
 var notifier = require('node-notifier');
