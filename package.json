@@ -1,7 +1,7 @@
 {
-  "name": "gitstatuschecker",
+  "name": "gsc",
   "version": "0.0.1",
-  "description": "Forget Add and Pull Git repository checker",
+  "description": "Git repository status checker",
   "main": "index.js",
   "bin": "index.js",
   "scripts": {
@@ -17,6 +17,6 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/CM-Kajiwara/gitStatusChecker"
+    "url": "https://github.com/CM-Kajiwara/gsc"
   }
 }
